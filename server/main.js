@@ -22,6 +22,13 @@ app.use(bodyParse.json())
 //   res.sendFile(path.resolve(__dirname + './../static/index.html'))
 // })
 
+app.use('/static', express.static('static'))
+
+app.get('/', function(req, res, next) {
+  console.log(__dirname + './../static/index.html')
+  res.sendFile(path.resolve(__dirname + './../static/index.html'))
+})
+
 app.get('/getList', function (req, res) {
   let data = {
     code: '200',
@@ -86,8 +93,9 @@ server.listen(3001, function() {
 function getList (cb) {
   fs.readdir(path.resolve(__dirname, './../static/uploads'), function(error, list) {
     // let url = `uploads${list}` 
+    list = list || []
     var newList = list.map((v, i) => {
-      return `uploads/${v}`
+      return `//localhost:3001/static/uploads/${v}`
     })
     cb(newList)
   })

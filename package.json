@@ -39,7 +39,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./build/dev-server.js",
     "server": "cross-env NODE_ENV=dev supervisor -i project public build",
-    "build": "cross-env NODE_ENV=production PLATFORM=web webpack"
+    "build": "webpack --config ./build/webpack.prod.conf.js"
   },
   "author": "",
   "license": "ISC"
