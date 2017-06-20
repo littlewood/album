@@ -22,3 +22,5 @@
 `npm run server`      开启服务端端web服务
 
 `npm run build`       构建生产环境前端代码
+
+`npm run preview`     预览页面

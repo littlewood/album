@@ -20,6 +20,11 @@ var devConfig =  {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './../project/src/index.jade'),
       filename: 'index.html'
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
     })
   ],
   module: {

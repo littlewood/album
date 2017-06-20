@@ -1,0 +1,5 @@
+var webpackConfig =  require('./webpack.prod.conf') 
+var webpack = require('webpack')
+var opn = require('opn')
+webpack(webpackConfig)
+opn(`http://localhost:3001`)
