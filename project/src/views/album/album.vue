@@ -4,7 +4,7 @@
       p.tit 默认相册
         span.btn-new(@click="showUpload") 上传图片
     ul.album
-      li.item(v-for="item in fileList") 
+      li.item(v-for="item in fileList", :key="item") 
         span.pic(:style="item | picStyle")
         i.del(@click="delImg(item)") del
     div(class="upload-img", v-show="isShowUpload")
@@ -133,9 +133,9 @@
           alert('请选择图片~~')
           return true
         } 
-
-        if (file[0].type !== 'image/png') {
-          alert('请上传正确的格式~')
+        console.log(file[0])
+        if (file[0].type.indexOf('image') === -1) {
+          alert('请上传正确的图片格式~')
           return true
         }
       },
@@ -162,7 +162,6 @@
 
         frame.onload = () => {
           var t  = frame.contentWindow.document.querySelector('body').innerHTML
-          console.log('yes')
           t = t.match(/<.+>(.+)<.+>/, '$1')[1]
           alert('图片上传成功：')
           this.$refs.form.reset()

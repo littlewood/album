@@ -4,10 +4,12 @@ var express = require('express')
 var webpack = require('webpack')
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
-var webpackConfig = require('./webpack.config')
+var webpackConfig = process.env.NODE_ENV === 'dev' ? require('./webpack.dev.conf') : require('./webpack.prod.conf') 
 var config = require('./../config')
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
+
+console.log('当前环境 ======> ' + process.env.NODE_ENV)
 
 var compiler = webpack(webpackConfig)
 var app = express()
