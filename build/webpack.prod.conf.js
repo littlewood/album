@@ -30,8 +30,8 @@ var devConfig =  {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        use: 'babel-loader'
+        test: /\.js$/,
+        loader: 'babel-loader'
       },
       {
         test: /\.css$/,
@@ -44,11 +44,6 @@ var devConfig =  {
       {
         test: /\.jade$/,
         use: 'jade-loader'
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: '/project'
       },
       {
         test: /\.stylus$/,

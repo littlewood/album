@@ -25,6 +25,7 @@
   .title
     position: relative
     .btn-new
+      cursor: pointer
       position: absolute
       right: 0
   .album
@@ -118,16 +119,20 @@
         this.check()
         return
       },
+
+      /**
+       * 原图片
+      */
       changeImg (e) {
-        var file = e.target.files[0]
-        var form = new FormData()
+        let file = e.target.files[0]
+        let form = new FormData()
         form.append('file', file)
         this.newImg = form
         this.preUrl = window.URL.createObjectURL(file)
       },
       check () {
-        var file = this.$refs.files.files
-        var len = file.lenth
+        let file = this.$refs.files.files
+        let len = file.lenth
 
         if (len === 0) {
           alert('请选择图片~~')
@@ -158,12 +163,13 @@
         })
       },
       watchUpload () {    
-        var frame = this.$refs.frame
+        let frame = this.$refs.frame
 
         frame.onload = () => {
-          var t  = frame.contentWindow.document.querySelector('body').innerHTML
-          t = t.match(/<.+>(.+)<.+>/, '$1')[1]
+          let result  = frame.contentWindow.document.querySelector('body').innerHTML
+          result = result.match(/<.+>(.+)<.+>/, '$1')[1]
           alert('图片上传成功：')
+
           this.$refs.form.reset()
           this.reset()
           this.getList()
