@@ -1,19 +1,23 @@
 <template lang="jade">
-  .hello
-    p 欢迎使用！
+  .section-hello
+    .hello
+      p {{ welcomeText }}
 
-    p 这是一个 webpack + vue + express 搭建的一个相册demo
 </template>
 <style lang="stylus">
-  .hello
-    width: 1360px
-    margin: 0 auto
+  .section-hello
+    width: 1160px
+    margin: 20px auto 0
+    .hello
+      padding: 0 0 0 20px
 </style>
 
 <script>
   export default {
-    mounted () {
-      console.log(this)
+    data () {
+      return {
+        welcomeText: '欢迎访问'
+      }
     }
   }
 </script>

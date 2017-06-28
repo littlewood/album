@@ -1,74 +1,110 @@
 <template lang="jade">
   div.section-album
     div.title
-      p.tit 默认相册
+      p.tit 
         span.btn-new(@click="showUpload") 上传图片
-    ul.album
+    ul.album(v-if="isShowList")
       li.item(v-for="item in fileList", :key="item") 
         span.pic(:style="item | picStyle")
-        i.del(@click="delImg(item)") del
+        i.del(@click="delImg(item)") x
+    div.tip(v-if="!isShowList") 这里一无所有， 快上传一点图片吧~~~~
     div(class="upload-img", v-show="isShowUpload")
-      p 上传图片
-      iframe(name="uploadFrame", id="uploadFrame", style="display:none;", ref="frame")
-      form(action="/uploadImg", method="post", enctype="multipart/form-data", target="uploadFrame", ref="form")
-        input(type="file", name="file", @change="changeImg", ref="files")
-        input(type="button", value="提交", @click="sumbit")
-        input(type="reset", value="取消", @click="reset")
-      div.preview
-        p 预览
-        img(:src="preUrl")
+      div.upload-dialog
+        div.upload-cntr
+          iframe(name="uploadFrame", id="uploadFrame", style="display:none;", ref="frame")
+          form(action="/uploadImg", method="post", enctype="multipart/form-data", target="uploadFrame", ref="form")
+            div.select-pic
+              input.file(type="file", name="file", @change="changeImg", ref="files")
+              input.button(type="button", value="提交", @click="sumbit")
+              input.button(type="reset", value="取消", @click="reset")
+          div.preview
+            img.pre-pic(:src="preUrl")
+        .close(@click="clickClose") x
+      .mask
 </template>
 <style lang="stylus">
   .section-album
-    max-width: 1360px
+    max-width: 1160px
     margin: 0 auto
+    padding: 20px
   .title
     position: relative
     .btn-new
+      cursor: pointer
       position: absolute
       right: 0
   .album
+    margin: 15px auto
+    display: flex
+    flex-flow: row wrap
     &:after
       content: ''
       display: block
       clear: both
     .item
-      float: left
+      // float: left
       position: relative
-      margin: 0 5px
-      border: 2px solid #ccc
+      margin: 20px 15px
+      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5)
       box-sizing: border-box
       width: 150px
       height: 200px
-      overflow: hidden
+      // overflow: hidden
+      border-radius: 3px
       &:hover
         .pic
-          transform: scale(1.3)
+          background-size: auto 120%
       &:hover
         .del
           display: block
       .del
-        color: #fff
         display: none
-        cursor: pointer
-        font-style: normal
-        width: 20px
-        height: 20px
-        text-align: center
-        line-height: 20px
-        font-size: 12px
-        background: rgba(0, 0, 0, 0.8)
-        position: absolute
-        top: 0
-        right: 0
       .pic
         display: inline-block
         width: 100%
         height: 100%
         transition: all .2s
+        background-size: auto 100%
   .upload-img
-    img
-      max-width: 90%
+    .upload-dialog
+      background #fff
+      width: 90%
+      height: 90%
+      padding: 10px
+      border: 1px solid #ccc
+      border-radius: 5px
+      position: fixed
+      top: 5%
+      left: 5%
+      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5)
+      z-index: 10
+    .upload-cntr
+      width: 100%
+      height: 100%
+    .mask
+      content: ''
+      position: fixed
+      height: 100%
+      width: 100%
+      background: rgba(0, 0, 0, 0.5)
+      top: 0
+      left: 0
+      z-index: 9
+    .select-pic
+      margin: 10px 0 0
+    .button
+      margin: 0 5px
+    .preview
+      width: 95%
+      height: 90%
+      overflow-y: scroll
+      margin: 15px auto 0
+    .pre-pic
+      height: auto
+      width: auto
+      max-width: 100%
+      margin: 0 auto
+      display: block
 </style>
 
 <script>
@@ -85,22 +121,29 @@
         preUrl: ''
       }
     },
+    computed: {
+      isShowList () {
+        return this.fileList.length > 0
+      }
+    },
     filters: {
       picStyle (pic) {
         return {
-          background: `url(${pic}) center center no-repeat`,
-          backgroundSize:'auto 100%'
+          backgroundImage: `url(${pic})`,
+          backgroundPosition: 'center'
         }
       }
     },
     methods: {
+      closeUpload () {
+        this.isShowUpload = false
+      },
       showUpload () {
         this.isShowUpload = true
       },
       getList () {
-        getList().then((d) => {
-          console.log(d)
-          this.fileList = d.data
+        getList().then((result) => {
+          this.fileList = result.data.data
         }).catch((e) => {
           console.log(e)
         })
@@ -118,22 +161,26 @@
         this.check()
         return
       },
+
+      /**
+       * 预览图片
+      */
       changeImg (e) {
-        var file = e.target.files[0]
-        var form = new FormData()
+        let file = e.target.files[0]
+        let form = new FormData()
         form.append('file', file)
         this.newImg = form
         this.preUrl = window.URL.createObjectURL(file)
       },
       check () {
-        var file = this.$refs.files.files
-        var len = file.lenth
+        let file = this.$refs.files.files
+        let len = file.length
 
         if (len === 0) {
           alert('请选择图片~~')
           return true
         } 
-        console.log(file[0])
+
         if (file[0].type.indexOf('image') === -1) {
           alert('请上传正确的图片格式~')
           return true
@@ -141,7 +188,7 @@
       },
       reset () {
         this.preUrl = ''
-        this.isShowUpload = false
+        this.closeUpload()
       },
       sumbit () {
         if(!this.check()) {
@@ -158,16 +205,20 @@
         })
       },
       watchUpload () {    
-        var frame = this.$refs.frame
+        let frame = this.$refs.frame
 
         frame.onload = () => {
-          var t  = frame.contentWindow.document.querySelector('body').innerHTML
-          t = t.match(/<.+>(.+)<.+>/, '$1')[1]
+          let result  = frame.contentWindow.document.querySelector('body').innerHTML
+          result = result.match(/<.+>(.+)<.+>/, '$1')[1]
           alert('图片上传成功：')
+
           this.$refs.form.reset()
           this.reset()
           this.getList()
         }
+      },
+      clickClose () {
+        this.reset()
       }
     },
     mounted () {

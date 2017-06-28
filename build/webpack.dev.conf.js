@@ -26,8 +26,9 @@ var devConfig =  {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        use: 'babel-loader'
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include:[path.resolve(__dirname,"./../project")]
       },
       {
         test: /\.css$/,
@@ -40,11 +41,6 @@ var devConfig =  {
       {
         test: /\.jade$/,
         use: 'jade-loader'
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: '/project'
       },
       {
         test: /\.stylus$/,

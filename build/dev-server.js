@@ -1,19 +1,18 @@
 var fs = require('fs')
 var path = require('path')
+var opn = require('opn')
 var express = require('express')
 var webpack = require('webpack')
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
-var webpackConfig = process.env.NODE_ENV === 'dev' ? require('./webpack.dev.conf') : require('./webpack.prod.conf') 
-var config = require('./../config')
-var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
-
-console.log('当前环境 ======> ' + process.env.NODE_ENV)
-
+var webpackConfig =  require('./webpack.dev.conf')
+var config = require('./../config')
 var compiler = webpack(webpackConfig)
 var app = express()
 var proxyTable = config.dev.proxyTable
+
+console.log('当前环境 => ' + process.env.NODE_ENV)
 
 var devMiddleWare = webpackDevMiddleware(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -44,20 +43,19 @@ app.use(hotMiddleWare)
 
 app.use(express.static('static'))
 
+devMiddleWare.waitUntilValid(() => {
+  _resolve()
+})
+
+app.listen(3000, function() {
+  let uri = `http://localhost:3000`
+  console.log('start listening on 3000')
+  opn(uri)
+})
 
 var _resolve
 var readyPromise = new Promise(resolve => {
   _resolve = resolve
-})
-
-devMiddleWare.waitUntilValid(() => {
-  let uri = `http://localhost:3000`
-  opn(uri)
-  _resolve()
-})
-// app.use(router)
-app.listen(3000, function() {
-  console.log('listening on 3000')
 })
 
 module.exports = {

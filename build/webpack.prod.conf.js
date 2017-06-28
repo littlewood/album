@@ -1,9 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-var hotMiddlewareScript = 'webpack-hot-middleware/client?reload=true'
-console.log()
-var devConfig =  {
+
+var config =  {
   entry: path.resolve(__dirname, './../project/src/index.js'),
   output: {
     path: path.resolve(__dirname, './../static/'),
@@ -16,17 +15,21 @@ var devConfig =  {
     }
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './../project/src/index.jade'),
       filename: 'index.html'
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
     })
   ],
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        use: 'babel-loader'
+        test: /\.js$/,
+        loader: 'babel-loader'
       },
       {
         test: /\.css$/,
@@ -41,11 +44,6 @@ var devConfig =  {
         use: 'jade-loader'
       },
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: '/project'
-      },
-      {
         test: /\.stylus$/,
         loader: 'stylus-loader'
       },
@@ -57,4 +55,4 @@ var devConfig =  {
   }
 }
 
-module.exports = devConfig
+module.exports = config
