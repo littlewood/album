@@ -41,8 +41,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=dev node ./build/dev-server.js",
-    "build": "webpack --config ./build/webpack.prod.conf.js",
     "server": "supervisor ./server/main.js",
+    "build": "webpack --config ./build/webpack.prod.conf.js",
     "preview": "node ./build/preview.js",
     "start": "pm2 start process.yml"
   },

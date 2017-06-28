@@ -7,18 +7,20 @@
       li.item(v-for="item in fileList", :key="item") 
         span.pic(:style="item | picStyle")
         i.del(@click="delImg(item)") x
-    div(v-if="!isShowList") 这里一无所有， 快上传一点图片吧~~~~
+    div.tip(v-if="!isShowList") 这里一无所有， 快上传一点图片吧~~~~
     div(class="upload-img", v-show="isShowUpload")
-      p 选择图片~ 
-      iframe(name="uploadFrame", id="uploadFrame", style="display:none;", ref="frame")
-      form(action="/uploadImg", method="post", enctype="multipart/form-data", target="uploadFrame", ref="form")
-        div.select-pic
-          input.file(type="file", name="file", @change="changeImg", ref="files")
-          input.button(type="button", value="提交", @click="sumbit")
-          input.button(type="reset", value="取消", @click="reset")
-      div.preview
-        p 预览
-        img(:src="preUrl")
+      div.upload-dialog
+        div.upload-cntr
+          iframe(name="uploadFrame", id="uploadFrame", style="display:none;", ref="frame")
+          form(action="/uploadImg", method="post", enctype="multipart/form-data", target="uploadFrame", ref="form")
+            div.select-pic
+              input.file(type="file", name="file", @change="changeImg", ref="files")
+              input.button(type="button", value="提交", @click="sumbit")
+              input.button(type="reset", value="取消", @click="reset")
+          div.preview
+            img.pre-pic(:src="preUrl")
+        .close(@click="clickClose") x
+      .mask
 </template>
 <style lang="stylus">
   .section-album
@@ -47,48 +49,62 @@
       box-sizing: border-box
       width: 150px
       height: 200px
-      overflow: hidden
+      // overflow: hidden
       border-radius: 3px
       &:hover
         .pic
-          transform: scale(1.3)
+          background-size: auto 120%
       &:hover
         .del
           display: block
       .del
-        color: #fff
         display: none
-        cursor: pointer
-        font-style: normal
-        width: 20px
-        height: 20px
-        text-align: center
-        line-height: 20px
-        font-size: 12px
-        background: rgba(0, 0, 0, 0.8)
-        position: absolute
-        top: 0
-        right: 0
-        transition: all .2s
       .pic
         display: inline-block
         width: 100%
         height: 100%
         transition: all .2s
+        background-size: auto 100%
   .upload-img
-    width: 380px
-    padding: 10px
-    border: 1px solid #ccc
-    border-radius: 5px
-    margin: 20px 0 0
+    .upload-dialog
+      background #fff
+      width: 90%
+      height: 90%
+      padding: 10px
+      border: 1px solid #ccc
+      border-radius: 5px
+      position: fixed
+      top: 5%
+      left: 5%
+      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5)
+      z-index: 10
+    .upload-cntr
+      width: 100%
+      height: 100%
+    .mask
+      content: ''
+      position: fixed
+      height: 100%
+      width: 100%
+      background: rgba(0, 0, 0, 0.5)
+      top: 0
+      left: 0
+      z-index: 9
     .select-pic
       margin: 10px 0 0
-    img
-      max-width: 90%
     .button
       margin: 0 5px
     .preview
-      margin: 15px 0 0
+      width: 95%
+      height: 90%
+      overflow-y: scroll
+      margin: 15px auto 0
+    .pre-pic
+      height: auto
+      width: auto
+      max-width: 100%
+      margin: 0 auto
+      display: block
 </style>
 
 <script>
@@ -113,12 +129,15 @@
     filters: {
       picStyle (pic) {
         return {
-          background: `url(${pic}) center center no-repeat`,
-          backgroundSize:'auto 100%'
+          backgroundImage: `url(${pic})`,
+          backgroundPosition: 'center'
         }
       }
     },
     methods: {
+      closeUpload () {
+        this.isShowUpload = false
+      },
       showUpload () {
         this.isShowUpload = true
       },
@@ -169,7 +188,7 @@
       },
       reset () {
         this.preUrl = ''
-        this.isShowUpload = false
+        this.closeUpload()
       },
       sumbit () {
         if(!this.check()) {
@@ -197,6 +216,9 @@
           this.reset()
           this.getList()
         }
+      },
+      clickClose () {
+        this.reset()
       }
     },
     mounted () {
