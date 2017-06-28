@@ -10,17 +10,20 @@
 
 - express  搭建基本Web服务 
 
-- supervisor 实现 加载重载服务进程
+- pm2 实现 加载重载服务进程
 
 
 ## 命令
 
 `npm install`         安装依赖
 
-`npm run dev`         开启本地开发前端服务
+`npm run dev`         启动本地开发服务器
 
-`npm run server`      开启服务端端web服务
+`npm run server`      启动后端服务器
 
 `npm run build`       构建生产环境前端代码
 
 `npm run preview`     预览页面
+
+`npm start`           启动本地开发服务器 & 后端服务器
+
