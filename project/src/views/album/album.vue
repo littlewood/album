@@ -1,27 +1,30 @@
 <template lang="jade">
   div.section-album
     div.title
-      p.tit 默认相册
+      p.tit 
         span.btn-new(@click="showUpload") 上传图片
-    ul.album
+    ul.album(v-if="isShowList")
       li.item(v-for="item in fileList", :key="item") 
         span.pic(:style="item | picStyle")
-        i.del(@click="delImg(item)") del
+        i.del(@click="delImg(item)") x
+    div(v-if="!isShowList") 这里一无所有， 快上传一点图片吧~~~~
     div(class="upload-img", v-show="isShowUpload")
-      p 上传图片
+      p 选择图片~ 
       iframe(name="uploadFrame", id="uploadFrame", style="display:none;", ref="frame")
       form(action="/uploadImg", method="post", enctype="multipart/form-data", target="uploadFrame", ref="form")
-        input(type="file", name="file", @change="changeImg", ref="files")
-        input(type="button", value="提交", @click="sumbit")
-        input(type="reset", value="取消", @click="reset")
+        div.select-pic
+          input.file(type="file", name="file", @change="changeImg", ref="files")
+          input.button(type="button", value="提交", @click="sumbit")
+          input.button(type="reset", value="取消", @click="reset")
       div.preview
         p 预览
         img(:src="preUrl")
 </template>
 <style lang="stylus">
   .section-album
-    max-width: 1360px
+    max-width: 1160px
     margin: 0 auto
+    padding: 20px
   .title
     position: relative
     .btn-new
@@ -29,19 +32,23 @@
       position: absolute
       right: 0
   .album
+    margin: 15px auto
+    display: flex
+    flex-flow: row wrap
     &:after
       content: ''
       display: block
       clear: both
     .item
-      float: left
+      // float: left
       position: relative
-      margin: 0 5px
-      border: 2px solid #ccc
+      margin: 20px 15px
+      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5)
       box-sizing: border-box
       width: 150px
       height: 200px
       overflow: hidden
+      border-radius: 3px
       &:hover
         .pic
           transform: scale(1.3)
@@ -62,14 +69,26 @@
         position: absolute
         top: 0
         right: 0
+        transition: all .2s
       .pic
         display: inline-block
         width: 100%
         height: 100%
         transition: all .2s
   .upload-img
+    width: 380px
+    padding: 10px
+    border: 1px solid #ccc
+    border-radius: 5px
+    margin: 20px 0 0
+    .select-pic
+      margin: 10px 0 0
     img
       max-width: 90%
+    .button
+      margin: 0 5px
+    .preview
+      margin: 15px 0 0
 </style>
 
 <script>
@@ -86,6 +105,11 @@
         preUrl: ''
       }
     },
+    computed: {
+      isShowList () {
+        return this.fileList.length > 0
+      }
+    },
     filters: {
       picStyle (pic) {
         return {
@@ -99,9 +123,8 @@
         this.isShowUpload = true
       },
       getList () {
-        getList().then((d) => {
-          console.log(d)
-          this.fileList = d.data
+        getList().then((result) => {
+          this.fileList = result.data.data
         }).catch((e) => {
           console.log(e)
         })
@@ -121,7 +144,7 @@
       },
 
       /**
-       * 原图片
+       * 预览图片
       */
       changeImg (e) {
         let file = e.target.files[0]
@@ -132,13 +155,13 @@
       },
       check () {
         let file = this.$refs.files.files
-        let len = file.lenth
+        let len = file.length
 
         if (len === 0) {
           alert('请选择图片~~')
           return true
         } 
-        console.log(file[0])
+
         if (file[0].type.indexOf('image') === -1) {
           alert('请上传正确的图片格式~')
           return true

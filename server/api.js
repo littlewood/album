@@ -10,17 +10,16 @@ checkPath(path.join(__dirname, './../static/uploads/'))
 
 module.exports = function(app) {
   app.use(bodyParse.json())
+
   // 读取文件列表
   app.get('/getList', function (req, res) {
-    let data = {
-      code: '200',
-      data: {}
-    }
-
-    getList(function(list) {
-      data.data = list
-
-      res.json(list)
+    getUploadList(function(list) {
+      let result = {
+        code: 200,
+        data: list,
+        msg: 'ok'
+      }
+      res.json(result)
     })
   })
 
@@ -52,7 +51,11 @@ module.exports = function(app) {
 }
 
 
-function getList (cb) {
+/**
+ * 读取相册目录下的所有文件，完成之后执行回调函数
+ * @param cb {Function} 回调函数
+ */
+function getUploadList (cb) {
   fs.readdir(path.resolve(__dirname, './../static/uploads'), function(error, list) {
     list = list || []
     let newList = list.map((v, i) => {
@@ -62,6 +65,11 @@ function getList (cb) {
   })
 }
 
+/**
+ * 判断目录是否存在， 如果不存在则新建目录
+ * @param fullPath {String} 目录路径
+ * @param cb {Function} 创建目录后的回调函数
+ */
 function checkPath (fullPath, cb) {
   try {
     fs.statSync(fullPath)

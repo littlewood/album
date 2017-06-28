@@ -15,7 +15,6 @@
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.5.2",
-    "babel-preset-stage-2": "^6.24.1",
     "body-parser": "^1.17.2",
     "cross-env": "^5.0.1",
     "css-loader": "^0.28.4",
@@ -32,6 +31,7 @@
     "style-loader": "^0.18.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
+    "typescript": "^2.3.4",
     "vue-loader": "^12.2.1",
     "vue-template-compiler": "^2.3.4",
     "webpack": "^2.6.1",
@@ -43,8 +43,10 @@
     "dev": "cross-env NODE_ENV=dev node ./build/dev-server.js",
     "build": "webpack --config ./build/webpack.prod.conf.js",
     "server": "supervisor ./server/main.js",
-    "preview": "node ./build/preview.js"
+    "preview": "node ./build/preview.js",
+    "start": "pm2 start process.yml"
   },
   "author": "littlewoodwong@bilibili.com",
-  "license": "ISC"
+  "license": "ISC",
+  "browserslist": {}
 }

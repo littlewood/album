@@ -12,9 +12,7 @@ var compiler = webpack(webpackConfig)
 var app = express()
 var proxyTable = config.dev.proxyTable
 
-console.log('当前环境 ======> ' + process.env.NODE_ENV)
-
-
+console.log('当前环境 => ' + process.env.NODE_ENV)
 
 var devMiddleWare = webpackDevMiddleware(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -45,25 +43,24 @@ app.use(hotMiddleWare)
 
 app.use(express.static('static'))
 
-
-// var _resolve
-// var readyPromise = new Promise(resolve => {
-//   _resolve = resolve
-// })
-
 devMiddleWare.waitUntilValid(() => {
-  let uri = `http://localhost:3000`
-  opn(uri)
-  // _resolve()
-})
-// app.use(router)
-app.listen(3000, function() {
-  console.log('listening on 3000')
+  _resolve()
 })
 
-// module.exports = {
-//   redy: readyPromise,
-//   close: () => {
-//     server.close()
-//   }
-// }
+app.listen(3000, function() {
+  let uri = `http://localhost:3000`
+  console.log('start listening on 3000')
+  opn(uri)
+})
+
+var _resolve
+var readyPromise = new Promise(resolve => {
+  _resolve = resolve
+})
+
+module.exports = {
+  redy: readyPromise,
+  close: () => {
+    server.close()
+  }
+}

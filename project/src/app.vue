@@ -3,15 +3,17 @@
     nav-bar
     router-view
 </template>
+<style lang="stylus">
+</style>
 <script>
-  import navBar from './components/nav-bar.vue'
+  import { NavBar } from './components'
   export default {
     data () {
       return {
       }
     },
     components: {
-      navBar
+      NavBar
     },
     methods: {
 
