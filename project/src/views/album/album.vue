@@ -8,19 +8,21 @@
         span.pic(:style="item | picStyle")
         i.del(@click="delImg(item)") x
     div.tip(v-if="!isShowList") 这里一无所有， 快上传一点图片吧~~~~
-    div(class="upload-img", v-show="isShowUpload")
-      div.upload-dialog
-        div.upload-cntr
-          iframe(name="uploadFrame", id="uploadFrame", style="display:none;", ref="frame")
-          form(action="/uploadImg", method="post", enctype="multipart/form-data", target="uploadFrame", ref="form")
-            div.select-pic
-              input.file(type="file", name="file", @change="changeImg", ref="files")
-              input.button(type="button", value="提交", @click="sumbit")
-              input.button(type="reset", value="取消", @click="reset")
-          div.preview
-            img.pre-pic(:src="preUrl")
-        .close(@click="clickClose") x
-      .mask
+
+    div(class="upload-img", ref="dialog")
+      transition(name="dialog")
+        div.upload-dialog(v-show="isShowUpload")
+          div.upload-cntr
+            iframe(name="uploadFrame", id="uploadFrame", style="display:none;", ref="frame")
+            form(action="/uploadImg", method="post", enctype="multipart/form-data", target="uploadFrame", ref="form")
+              div.select-pic
+                input.file(type="file", name="file", @change="changeImg", ref="files")
+                input.button(type="button", value="提交", @click="sumbit")
+                input.button(type="reset", value="取消", @click="reset")
+            div.preview
+              img.pre-pic(:src="preUrl")
+          .close(@click="clickClose") x
+      .mask(v-show="isShowUpload")
 </template>
 <style lang="stylus">
   .section-album
@@ -76,8 +78,12 @@
       position: fixed
       top: 5%
       left: 5%
-      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5)
+      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5)    
       z-index: 10
+      &.dialog-enter-active
+        animation: dialog-in .2s
+      &.dialog-leave-active
+        animation: dialog-out .2s
     .upload-cntr
       width: 100%
       height: 100%
@@ -105,6 +111,34 @@
       max-width: 100%
       margin: 0 auto
       display: block
+  
+
+  @keyframes dialog-in {
+    0% {
+      top: -100%
+    }
+    80% {
+      top: 5%
+    }
+
+    90% {
+      top: 4%
+    }
+    100% {
+      top: 5%
+    }
+  }
+  @keyframes dialog-out {
+    0% {
+      top: -5%
+    }
+    80% {
+      top: -90%
+    }
+    100% {
+      top: -100%
+    }
+  }
 </style>
 
 <script>
@@ -118,7 +152,8 @@
         newContent: '',
         fileName: '',
         newImg: '',
-        preUrl: ''
+        preUrl: '',
+        isOut: false
       }
     },
     computed: {
@@ -188,6 +223,8 @@
       },
       reset () {
         this.preUrl = ''
+        // this.isOut = true
+        // this.$refs.dialog.
         this.closeUpload()
       },
       sumbit () {

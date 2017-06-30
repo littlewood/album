@@ -7,7 +7,7 @@ var config =  {
   output: {
     path: path.resolve(__dirname, './../static/'),
     publicPath: '//localhost:3001/static',
-    filename: 'bundle.js'
+    filename: 'bundle.[hash].js'
   },
   resolve: {
     alias: {

@@ -8,6 +8,7 @@ compiler.run(function(err, stats) {
     console.error(err)
     return
   }
+
   console.log(stats.toString({
     colors: true
   }))
