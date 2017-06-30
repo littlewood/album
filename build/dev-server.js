@@ -44,6 +44,7 @@ app.use(hotMiddleWare)
 app.use(express.static('static'))
 
 devMiddleWare.waitUntilValid(() => {
+  console.log('....webpack compile.....')
   _resolve()
 })
 
@@ -57,6 +58,11 @@ var _resolve
 var readyPromise = new Promise(resolve => {
   _resolve = resolve
 })
+
+
+process.on('SIGINT', function() {
+  // console.log('发生了一些事情');
+});
 
 module.exports = {
   redy: readyPromise,

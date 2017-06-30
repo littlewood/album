@@ -2,14 +2,14 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 var hotMiddlewareScript = 'webpack-hot-middleware/client?reload=true'
-console.log()
+
 var devConfig =  {
   entry: ['./build/dev-client.js', './project/src/index.js'],
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, './../static/'),
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: 'bundle.[hash].js'
   },
   resolve: {
     alias: {
