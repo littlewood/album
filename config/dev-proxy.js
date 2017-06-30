@@ -1,14 +1,6 @@
 module.exports = {
-  '/getList': {
+  '/album/**': {
     target: 'http://localhost:3001/',
-    changeOrigin: true
-  },
-  '/uploadImg': {
-    target: 'http://localhost:3001',
-    changeOrigin: true
-  },
-  '/delImg': {
-    target: 'http://localhost:3001',
     changeOrigin: true
   }
 }

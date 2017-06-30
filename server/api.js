@@ -12,7 +12,7 @@ module.exports = function(app) {
   app.use(bodyParse.json())
 
   // 读取文件列表
-  app.get('/getList', function (req, res) {
+  app.get('/album/getList', function (req, res) {
     getUploadList(function(list) {
       let result = {
         code: 200,
@@ -24,7 +24,7 @@ module.exports = function(app) {
   })
 
   // 删除图片
-  app.post('/delImg', function(req, res) {
+  app.post('/album/delImg', function(req, res) {
     let file = req.body.pic.replace(/\/\/localhost:3001/, '')
     file && fs.unlink(path.resolve(__dirname, './..' + file), function(error, data) {
       res.json('ok')
@@ -33,7 +33,7 @@ module.exports = function(app) {
   })
 
   // 上传图片
-  app.post('/uploadImg', upload.single('file'), function(req, res) {
+  app.post('/album/uploadImg', upload.single('file'), function(req, res) {
     let  item = req.file
     let extName = item.originalname.match(/(\.[^\.]+)$/)[1]
     let targetPath = path.resolve(__dirname, './../static/uploads/' + new Date().getTime()) + extName

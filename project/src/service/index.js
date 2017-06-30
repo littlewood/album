@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 const urls = {
-  list: '/getList',
-  add: '/addFile',
-  uploadImg: '/uploadImg',
-  del: '/delFile',
-  delImg: '/delImg'
+  list: '/album/getList',
+  add: '/album/addFile',
+  uploadImg: '/album/uploadImg',
+  del: '/album/delFile',
+  delImg: '/album/delImg'
 }
 
 function getList() {
