@@ -13,6 +13,10 @@ const config = [
     type: 'config',
     link: '/config',
     text: 'config'
+  }, {
+    type: 'play',
+    link: '/play',
+    text: 'play'
   }
 ]
 

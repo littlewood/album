@@ -2,7 +2,7 @@ import VueRouter from 'vue-router'
 import Vue from 'vue'
 Vue.use(VueRouter)
 
-import { hello, album, config } from './../views'
+import { hello, album, config, play } from './../views'
 
 var router = new VueRouter({
   routes: [
@@ -20,6 +20,11 @@ var router = new VueRouter({
       name: 'config',
       path: '/config',
       component: config
+    },
+    {
+      name: 'play',
+      path: '/play',
+      component: play
     }
   ]
 })
